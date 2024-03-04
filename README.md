@@ -1,17 +1,18 @@
+<img width="1789" alt="Screenshot 2024-03-05 at 12 31 42 AM" src="https://github.com/Chensokheng/next--supabase-saas-boilerplate/assets/52232579/74fbc417-af32-4835-b0bd-d03c9c969102">
+
 ## Getting Started
 
 First, run the development server:
 
 ```bash
 npm i
-npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Next setup your .env
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```bash
+npm run dev
+```
 
 ## Learn More
 
@@ -21,48 +22,7 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 -   [Shadcn](https://ui.shadcn.com/) - Build your component library.
 -   [React Query](https://tanstack.com/query/latest/) - TanStack Query.
 
-## Profile table
+## Setup supabase
 
-```sql
-create table
-  public.profiles (
-    id uuid not null,
-    created_at timestamp with time zone not null default now(),
-    email text not null,
-    display_name text null,
-    image_url text null,
-    constraint profiles_pkey primary key (id),
-    constraint profiles_id_fkey foreign key (id) references auth.users (id) on update cascade on delete cascade
-  ) tablespace pg_default;
-```
-
-## Auth Trigger Function
-
-```sql
-begin
-
-  insert into public.profiles(id,email,display_name,image_url)
-  values(
-    new.id,
-    new.raw_user_meta_data ->> 'email',
-    COALESCE(new.raw_user_meta_data ->> 'user_name',new.raw_user_meta_data ->> 'name'),
-    new.raw_user_meta_data ->> 'avatar_url'
-  );
-  return new;
-
-end;
-```
-
-### Auth Trigger Creation
-
-```sql
-create trigger create_user_on_signup
-after insert on auth.users for each row
-execute function create_user_on_signup ();
-```
-
-### Remove Trigger
-
-```sql
-drop trigger create_user_on_signup on auth.users;
-```
+Checkout this documentation on how to migration from your supabase local to remote
+https://supabase.com/docs/guides/cli/local-development
